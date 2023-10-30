@@ -1,0 +1,100 @@
+### Flights index
+GET http://localhost:9200/complex_mapping_index
+
+
+### Search basic
+POST http://localhost:9200/complex_mapping_index/_search
+Content-Type: application/json
+
+{
+    "query": {
+        "match_all": {}
+    }
+}
+
+
+### Search basic
+POST http://localhost:9200/kibana_sample_data_flights/_search
+Content-Type: application/json
+
+{
+    "query": {
+        "query_string": {
+            "query": "*Sydney*",
+            "fields": ["OriginCityName", "DestCityName"]
+        }
+    },
+    "aggs": {
+        "day": {
+            "histogram": {
+                "field": "dayOfWeek",
+                "interval": "1"
+      }
+    }
+  }
+}
+### filter
+POST http://localhost:9200/kibana_sample_data_flights/_search?size=20
+Content-Type: application/json
+
+{
+    "query": {
+        "bool": {
+            "must": [
+                {"match":{"dayOfWeek":1}},
+                {"match":{"OriginCountry":"FR"}},                 
+                {"match": {"OriginCityName": {"query": "Peres", "fuzziness": "2"}}}
+            ]
+        }
+    },
+    "_source": ["OriginCityName"]
+}
+
+### filter geo
+POST http://localhost:9200/kibana_sample_data_flights/_search?size=0
+Content-Type: application/json
+
+{
+    "query": {
+        "bool": {
+            "filter": {
+                "geo_distance": {
+                    "distance": "220km",
+                    "OriginLocation": {
+                        "lat": 49.577071,
+                        "lon": 6.113627
+                    }
+                }
+            }
+        }
+    },
+    "aggs": {
+        "city": {
+            "terms": {
+                "field": "DestCityName"
+            }
+        }
+    }
+}
+
+###
+POST http://localhost:9200/kibana_*/_search
+Content-Type: application/json
+
+{
+    "query": {
+        "match_all": {}
+    }
+}
+
+###
+POST http://localhost:9200/kibana_*/_search
+Content-Type: application/json
+
+{
+    "query": {
+        "match": {
+            "currency": "EUR"
+        }
+    }
+}

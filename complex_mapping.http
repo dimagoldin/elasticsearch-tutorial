@@ -1,0 +1,108 @@
+### Insert into index
+POST http://localhost:9200/person/_doc/1
+content-type: application/json
+
+{
+    "type": "person",
+    "date_of_birth": "2024-01-02",
+    "name": {
+        "first": "Dima",
+        "last": "Goldin"
+    },
+    "bio": "Likes to take long walks in the halls of Orgrimmar with their kitty and running in Undercitys tunnels"
+}
+
+### Delete index
+DELETE http://localhost:9200/person
+### Custom mapping
+PUT http://localhost:9200/person
+content-type: application/json
+
+{
+    "settings": {
+    "analysis": {
+      "analyzer": {
+        "english_stemmer": {
+          "tokenizer": "standard",
+          "filter": ["lowercase", "english_stemming"]
+        }
+      },
+      "filter": {
+        "english_stemming": {
+          "type": "stemmer",
+          "language": "english"
+        }
+      }
+    }
+  },
+    "mappings": {
+        "properties": {
+            "type": {
+                "type": "keyword"
+            },
+            "date_of_birth": {
+                "type": "date",
+                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+            },
+            "name": {
+                "type": "object",
+                "properties": {
+                    "first": {"type": "keyword"},
+                    "last": {"type": "keyword"},
+                    "full": {
+                        "type": "keyword",
+                        "script": {
+                            "source": "emit(params._source['name']['first']+' '+params._source['name']['last'])"
+                        }
+                    }
+                }
+            },
+            "bio": {
+                "type": "text",
+                "analyzer": "english_stemmer",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword"
+                    }
+                }
+            },
+            "gender": {
+                "type": "keyword"
+            }
+        }
+    }
+}
+
+###
+POST http://localhost:9200/person/_search
+content-type: application/json
+
+{
+    "query": {
+        "match_all": {}
+    }
+}
+
+###
+POST http://localhost:9200/person/_search
+content-type: application/json
+
+{
+    "query": {
+        "match": {
+            "name.full": "Dima Goldin"
+        }
+    }
+}
+
+###
+POST http://localhost:9200/person/_search
+content-type: application/json
+
+{
+    "query": {
+        "match": {
+            "bio": "like"
+        }
+    }
+}

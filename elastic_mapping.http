@@ -1,0 +1,62 @@
+### Delete index
+DELETE http://localhost:9200/test_mapping
+
+
+### Insert into index
+POST http://localhost:9200/test_mapping/_doc/1
+content-type: application/json
+
+{
+    "name": "sample",
+    "time": "2024-01-02" 
+}
+
+### Gett docuemnt by id
+GET http://localhost:9200/test_mapping/_doc/1
+
+
+### Get mapping of index
+GET http://localhost:9200/test_mapping/_mapping
+
+
+### Custom mapping
+PUT http://localhost:9200/test_mapping
+content-type: application/json
+
+{
+  "mappings": {
+    "properties": {
+      "name":    { "type": "text" },  
+      "time":  { "type": "date", "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"  }  
+    }
+  }
+}
+
+
+### Search by name
+POST http://localhost:9200/test_mapping/_search
+content-type: application/json
+
+{
+    "query": {
+        "match": {
+            "name": "sample"
+        }
+    }
+}
+
+
+### Search by date
+POST http://localhost:9200/test_mapping/_search
+content-type: application/json
+
+{
+    "query": {
+        "range": {
+            "time": {
+                "gte": 1698240342000 ,
+                "format": "epoch_millis"
+            }
+        }
+    }
+}
