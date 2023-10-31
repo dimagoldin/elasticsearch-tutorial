@@ -1,0 +1,7 @@
+###
+POST http://localhost:9200/_sql?format=txt
+Content-Type: application/json
+
+{
+  "query": "SELECT DestAirportID AS DestID, Cancelled, COUNT(DestAirportID) as count FROM kibana_sample_data_flights WHERE Cancelled = false GROUP BY DestAirportID, Cancelled HAVING count > 10 ORDER BY count DESC LIMIT 50"
+}

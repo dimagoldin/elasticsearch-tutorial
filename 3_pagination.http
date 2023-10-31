@@ -1,0 +1,48 @@
+###
+GET  http://localhost:9200/_cat/indices?v
+
+### basic
+POST http://localhost:9200/kibana_sample_data_flights/_search
+Content-Type: application/json
+
+{
+    "from": 0,
+    "size": 5,
+    "query": {
+        "match_all": {}
+    }
+}
+
+### limititations
+POST http://localhost:9200/kibana_sample_data_flights/_search
+Content-Type: application/json
+
+{
+    "from": 9999,
+    "size": 1,
+    "query": {
+        "match_all": {}
+    }
+}
+
+### search after
+POST http://localhost:9200/kibana_sample_data_flights/_search
+Content-Type: application/json
+
+{
+    "size": 5,
+    "search_after": [19881.482, 1700112559000],
+    "query": {
+        "match_all": {}
+
+    },
+    "sort": [
+        {"DistanceKilometers": "desc"},
+        {"timestamp": "asc"}
+    ]
+}
+
+### point in time
+POST http://localhost:9200/kibana_sample_data_flights/_pit?keep_alive=1m
+
+### scroll api - like cursor - not recommended - use search_after + point in time
