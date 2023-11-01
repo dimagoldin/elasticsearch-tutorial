@@ -1,4 +1,7 @@
-### Insert into index
+### mapping get
+GEt http://localhost:9200/person/_mapping
+
+### Insert into index person 1
 POST http://localhost:9200/person/_doc/1
 content-type: application/json
 
@@ -11,6 +14,21 @@ content-type: application/json
     },
     "bio": "Likes to take long walks in the halls of Orgrimmar with their kitty and running in Undercitys tunnels"
 }
+
+### Insert into index person 2
+POST http://localhost:9200/person/_doc/2
+content-type: application/json
+
+{
+    "type": "person",
+    "date_of_birth": "2024-01-02",
+    "name": {
+        "first": "Other",
+        "last": "person"
+    },
+    "bio": "this is a test like no other that walked in the park"
+}
+
 
 ### Delete index
 DELETE http://localhost:9200/person
@@ -102,7 +120,7 @@ content-type: application/json
 {
     "query": {
         "match": {
-            "bio": "like"
+            "bio": "walked likes Undercitys "
         }
     }
 }

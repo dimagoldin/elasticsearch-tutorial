@@ -4,6 +4,8 @@ GET http://localhost:9200
 ### Get all indices
 GET http://localhost:9200/_cat/indices?v 
 
+###
+DELETE http://localhost:9200/my_index
 ### Insert into index
 POST http://localhost:9200/my_index/_doc/123
 content-type: application/json

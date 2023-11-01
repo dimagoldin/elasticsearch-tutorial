@@ -1,9 +1,9 @@
 ### Flights index
-GET http://localhost:9200/complex_mapping_index
+GET http://localhost:9200/kibana_sample_data_flights
 
 
 ### Search basic
-POST http://localhost:9200/complex_mapping_index/_search
+POST http://localhost:9200/kibana_sample_data_flights/_search
 Content-Type: application/json
 
 {
@@ -51,7 +51,7 @@ Content-Type: application/json
 }
 
 ### filter geo
-POST http://localhost:9200/kibana_sample_data_flights/_search?size=0
+POST http://localhost:9200/kibana_sample_data_flights/_search?size=20
 Content-Type: application/json
 
 {
